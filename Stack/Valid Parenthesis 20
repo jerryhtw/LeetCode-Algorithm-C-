@@ -1,0 +1,67 @@
+﻿// 일단 stack에 다 넣는 것이 아니라 한 char씩 보면서 넣으면 더 쉽게 할 수 있네
+
+class Solution {
+public:
+    bool isValid(string s) {
+
+        stack<char> main_stack;
+        stack<char> temp_stack;
+
+        for(char c : s){
+            main_stack.push(c);
+        }
+
+        while(!main_stack.empty()){
+            char top_elem;
+            if(temp_stack.empty()){
+                top_elem = main_stack.top();
+                main_stack.pop();               
+            }else{
+                top_elem = temp_stack.top();
+                temp_stack.pop();                    
+            }
+
+            if(main_stack.empty()){
+                return false;
+            }else if(top_elem == ')' && main_stack.top() == '('){
+                main_stack.pop();
+            }else if(top_elem == ')' && (main_stack.top() == '{' || main_stack.top() == '[')){
+                return false;
+            }else if(top_elem == ')'){
+                // 나머지는 다시 temp_stack으로
+                temp_stack.push(top_elem);
+                char next_top = main_stack.top();
+                main_stack.pop();
+                temp_stack.push(next_top);
+            }else if(top_elem == ']' && main_stack.top() == '['){
+                main_stack.pop();
+            }else if(top_elem == ']' && (main_stack.top() == '{' || main_stack.top() == '(')){
+                return false;
+            }else if(top_elem == ']'){
+                // 나머지는 다시 temp_stack으로
+                temp_stack.push(top_elem);
+                char next_top = main_stack.top();
+                main_stack.pop();
+                temp_stack.push(next_top);
+            }else if(top_elem == '}' && main_stack.top() == '{'){
+                main_stack.pop();
+            }else if(top_elem == '}' && (main_stack.top() == '(' || main_stack.top() == '[')){
+                return false;
+            }else if(top_elem == '}'){
+                // 나머지는 다시 temp_stack으로
+                temp_stack.push(top_elem);
+                char next_top = main_stack.top();
+                main_stack.pop();
+                temp_stack.push(next_top);
+            }else{
+                return false;
+            }
+        }
+        if(temp_stack.empty()){
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+};
